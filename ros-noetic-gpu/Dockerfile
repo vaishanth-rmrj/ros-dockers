@@ -1,7 +1,7 @@
 FROM nvidia/cuda:11.0.3-base-ubuntu20.04
 
-LABEL Description="ROS: Noetic-Desktop (Ubuntu 20.04)" Vendor="TurluCode" Version="1.2"
-LABEL com.turlucode.ros.version="noetic"
+LABEL Description="ROS: Noetic-Desktop (Ubuntu 20.04)"
+# LABEL com.turlucode.ros.version="noetic"
 
 # Install packages without prompting the user to answer any questions
 ENV DEBIAN_FRONTEND noninteractive 
@@ -52,19 +52,6 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8
 
-# Install OhMyZSH (optional)
-# RUN apt-get update && apt-get install -y zsh && apt-get clean && rm -rf /var/lib/apt/lists/*
-# RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
-# #RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
-# RUN chsh -s /usr/bin/zsh root
-# RUN git clone https://github.com/sindresorhus/pure /root/.oh-my-zsh/custom/pure
-# RUN ln -s /root/.oh-my-zsh/custom/pure/pure.zsh-theme /root/.oh-my-zsh/custom/
-# RUN ln -s /root/.oh-my-zsh/custom/pure/async.zsh /root/.oh-my-zsh/custom/
-# RUN sed -i -e 's/robbyrussell/refined/g' /root/.zshrc
-# RUN sed -i '/plugins=(/c\plugins=(git git-flow adb pyenv tmux)' /root/.zshrc
-
-
-
 # Install ROS
 RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
@@ -84,10 +71,10 @@ RUN echo "export ROSLAUNCH_SSH_UNKNOWN=1" >> /root/.bashrc
 
 WORKDIR /
 
-# installing pytorch
+# installing pytorch (optional)
 RUN pip3 install -f torch torchvision
 
-# installing required packages
+# installing required packages (optional)
 RUN pip3 install pandas
 RUN pip3 install matplotlib
 RUN pip3 install scikit-learn
@@ -97,7 +84,6 @@ RUN pip3 install opencv-python
 # Terminator Config (optional)
 RUN mkdir -p /root/.config/terminator/
 COPY terminator_config /root/.config/terminator/config 
-COPY terminator_background.png /root/.config/terminator/background.png
 
 # Entry script
 COPY entrypoint_setup.sh / 
